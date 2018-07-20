@@ -4,7 +4,7 @@
   ```console
   sudo apt install virtualbox vagrant
   ```
-  2. download spark package [here](https://spark.apache.org/downloads.html), named "spark.tgz"
+  2. download spark package [here](https://spark.apache.org/downloads.html), named "spark.tgz". Put it same folder with `vagrantfile`.
   
   3. Create *Vagrantfile* to give a defination of the cluster, such as how many notes and their names.
   
