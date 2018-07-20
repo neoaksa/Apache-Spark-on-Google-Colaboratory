@@ -61,4 +61,14 @@
           ```
           The final required function tells combineByKey how to merge two combiners. In this example with tuples as combiners in the form of (sum, count), all we need to do is add the first and last elements together.
      * Group by
-       
+       * groupby()
+       * cogroup() # mulltiable RDD
+     * Join
+       * leftOutJoin()
+       * rightOutJoin()
+       * join()[innter join]
+     * Sort
+       ```python
+       rdd.sortByKey(ascending=True, numPartitions=None, keyfunc = lambda x: str(x))
+       ```
+      * use partitionBy() to reduce network communication
