@@ -1,4 +1,4 @@
-# Apache-Spark-on-Google-Colaboratory
+# Apache-Spark-Brief
 ## Components for distributed execution in Spark
 
 ![Components for distributed execution in Spark](https://spark.apache.org/docs/latest/img/cluster-overview.png)
