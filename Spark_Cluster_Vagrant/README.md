@@ -34,8 +34,9 @@
   6. To test it
   ```console
   vagrant ssh hn0
-  spark-submit --class org.apache.spark.examples.SparkPi ~/spark/examples/jars/spark-examples_2.11-2.2.1.jar 1000
-
+  spark-submit --class org.apache.spark.examples.SparkPi ~/spark/examples/jars/spark-examples_2.11-2.3.1.jar 1000
   ```
+  `spark-examples_2.11-2.3.1.jar` might be different according to the spark version downloaded
+  
   7. `vagrant halt` to stop vm, `vagrant halt hn0` to stop host, `vagrant destroy` to delete vm(type 4 y to delete all of them)
   
