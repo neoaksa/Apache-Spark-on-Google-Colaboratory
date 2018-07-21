@@ -28,6 +28,9 @@
   
   4. run `vagrant up` in your `vagrantfile` is. 
   5. SSH: `vagrant ssh hn0` to access host, then you can use `sudo su` to gain root role. Or Spark website: `http://10.1.0.4:8080`. `vagrant ssh-config` to browse the configration of this culster.
+  
+  ![img](Screenshot_20180720_201500.png)
+  
   6. To test it
   ```console
   vagrant ssh hn0
@@ -35,3 +38,4 @@
 
   ```
   7. `vagrant halt` to stop vm, `vagrant halt hn0` to stop host, `vagrant destroy` to delete vm(type 4 y to delete all of them)
+  
