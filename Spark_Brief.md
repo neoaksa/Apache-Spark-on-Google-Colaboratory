@@ -72,4 +72,48 @@
        rdd.sortByKey(ascending=True, numPartitions=None, keyfunc = lambda x: str(x))
        ```
       * use partitionBy() to reduce network communication
-        `partitionBy()` transformation allows applying custom partitioning logic over the RDD.
+        `partitionBy()` transformation allows applying custom partitioning logic over the RDD which consisits of paird(key/value) objects. `partitionBy(num)` splits data into 2 chunks using default hash partitioner: partition = partitionFunc(key) % num_partitions. It reduce network communication as many operations involve shuffle data by key accross network. but partition operation can make this process on at least a single machine.
+        ```python
+        with  SparkContext("local[2]") as sc:
+           rdd = sc.parallelize(nums) 
+                   .map(lambda el: (el, el)) 
+                   .partitionBy(2) # plits data into 2 chunks
+                   .persist()
+           print("Number of partitions: {}".format(rdd.getNumPartitions()))
+           print("Partitioner: {}".format(rdd.partitioner))
+           print("Partitions structure: {}".format(rdd.glom().collect()))
+        ```
+        > all the operations lead to a patitioner: cogroup(), groupWith(), join(), leftOuterJoin(), rightOuterJoin(),groupByKey(), reduceByKey(), combineByKey(),partitionBy(), sort(), mapValues()(if the parent RDD has a partitioner), flatMapValues() (if parent has a partitioner), and filter() (if parent has a partitioner). 
+        ```python
+        # custom patitioner
+        def hash_domain(url):
+            return hash(urlparse.urlparse(url).netloc)
+        rdd.partitionBy(20, hash_domain)
+        ```
+## Load and Saving
+   * File format
+     * TextFile: `input = sc.textFile(“filepath”)` # another way is use `wholeTextFile("filepath")`, the difference is wholeTextFile will return a parid RDD whose key is filepath.To save file, we can simple use `saveAsTextFile()`
+     * Json: `data = input.map(lambda x: json.loads(x))`. Saving to Json: `(data.filter(lambda x: x[‘lovesPandas’]).map(lambda x: json.dumps(x)).saveAsTextFile(outputFile))`
+     * CSV: to read CVS, we should read it as text firstly, then parse it.
+         ```python
+         def loadRecord(line):
+             input = StringIO.StringIO(line)
+             reader = csv.DictReader(input, fieldnames=[“name”, “favouriteAnimal”])
+             return reader.next()
+         input = sc.textFile(inputFile).map(loadRecord)
+         ```
+     to write CSV:
+         ```python
+         def writeRecords(records):
+            output = StringIO.StringIO()
+            writer = csv.DictWriter(output, fieldnames=[“name”, “favoriteAnimal”])
+            for record in records:
+            writer.writerow(record)
+            return [output.getvalue()]
+         pandaLovers.mapPartitions(writeRecords).saveAsTextFile(outputFile)
+         ```
+     * SequenceFile
+          ```python
+          data = sc.sequenceFile(inFile,“org.apache.hadoop.io.Text”, “org.apache.hadoop.io.IntWritable”)
+          ```
+     
