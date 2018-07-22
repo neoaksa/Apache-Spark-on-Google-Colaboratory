@@ -72,3 +72,4 @@
        rdd.sortByKey(ascending=True, numPartitions=None, keyfunc = lambda x: str(x))
        ```
       * use partitionBy() to reduce network communication
+        `partitionBy()` transformation allows applying custom partitioning logic over the RDD.
