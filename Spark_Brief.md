@@ -92,7 +92,7 @@
         ```
 ## Load and Saving
    * File format
-     * TextFile: `input = sc.textFile(“filepath”)` # another way is use `wholeTextFile("filepath")`, the difference is wholeTextFile will return a parid RDD whose key is filepath.To save file, we can simple use `saveAsTextFile()`
+     * TextFile: `input = sc.textFile(“filepath”)`. Another way is use `wholeTextFile("filepath")`, the difference is wholeTextFile will return a parid RDD whose key is filepath.To save file, we can simple use `saveAsTextFile()`. The text file can be flatfile or compressed file, such as gz(gzip) file.
      * Json: `data = input.map(lambda x: json.loads(x))`. Saving to Json: `(data.filter(lambda x: x[‘lovesPandas’]).map(lambda x: json.dumps(x)).saveAsTextFile(outputFile))`
      * CSV: to read CVS, we should read it as text firstly, then parse it.
          ```python
@@ -112,8 +112,28 @@
             return [output.getvalue()]
          pandaLovers.mapPartitions(writeRecords).saveAsTextFile(outputFile)
          ```
+         or
+         ```python
+         # Read from HDFS
+        df_load = sparkSession.read.csv('hdfs://cluster/user/hdfs/test/example.csv')        
+         ```
      * SequenceFile
           ```python
           data = sc.sequenceFile(inFile,“org.apache.hadoop.io.Text”, “org.apache.hadoop.io.IntWritable”)
           ```
+     * HDFS
+          ```python
+          df_load = sparkSession.read.csv('hdfs://cluster/user/hdfs/test/example.csv')
+          ```
+     * Apache Hive
+          
+          Copying your hive-site.xml file to Spark’s ./conf/ directory
+          ```python
+          rom pyspark.sql import HiveContext
+          hiveCtx = HiveContext(sc)
+          rows = hiveCtx.sql(“SELECT name, age FROM users”)
+          firstRow = rows.first()
+          ```
+     >  To access `Amazon S3` in Spark, you should first set the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables to your S3 credentials. To use Spark with `HDFS(Hadoop distributed file system)`, the only thing is simply specifying hdfs://master:port/path for your input and output.
+     
      
