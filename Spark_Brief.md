@@ -3,15 +3,31 @@
 
 ![Components for distributed execution in Spark](https://spark.apache.org/docs/latest/img/cluster-overview.png)
 
+Cluster Manager could be a build-in manager called `standalone cluster manager`, or spark can work with Hadoop YARN or Apache Mesos.
+
+* Driver
+  1. Covert user program into tasks
+  2. Schedule tasks on executors
+
 * Two types of RDD operations
-  * Transformations: retrun a new RDD
-    * element-wise
+  1. Transformations: retrun a new RDD.
+     element-wise:`filter(), map()，flatmap(),distinct(), union(),intersection(), substract(),cartsian()`
+  2. Actions: return others. spark is *lazy Evaluation*, which means it is only executed until it sees an action.          
+          `count(),countByValue(),first(),take(n),top(),saveAsTextFile(),aggregation(),fold(),collect(),reduce(),takeSample(),foreach()
+          
+## Shared variables
+  1. Accumulators
     
-      filter(), map()，flatmap(),distinct(), union(),intersection(), substract(),cartsian()
-  * Actions: return others
-    * spark is *lazy Evaluation*, which means it is only executed until it sees an action.
-    
-       count(),countByValue(),first(), take(n),top(),saveAsTextFile(),aggregation(),fold(),collect(),reduce(),takeSample(),foreach()
+    ```python
+    # create a accumulators starts with zero.
+    numCount = sc.accumulators(0) 
+    ```
+  2. Broadcast
+     
+     Allows the program to efficiently send a large, read-only value to all the worker nodes for use in one or more Spark operations. 
+     ```python
+     signPrefixes = sc.broadcast(loadCallSignTable())       
+     ```
 
 ## Persistance
   Avoid computing an RDD mutiple times. With 5 different storage level(they have different space use,cpu time):
